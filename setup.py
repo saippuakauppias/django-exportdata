@@ -11,7 +11,7 @@ setup(
     version='0.1',
     license='ISC',
     description='Export model data (filtered/ordered/ranged) to csv file',
-    long_description=read('README.md'),
+    long_description=read('README.md') + read('CHANGES.md'),
     keywords='django export data csv json file',
     url='https://github.com/saippuakauppias/django-exportdata',
     author='Denis Veselov',
