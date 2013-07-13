@@ -4,7 +4,6 @@ import sys
 from optparse import make_option
 from collections import Callable
 
-from django.conf import settings
 from django.contrib.sites.models import Site
 from django.db.models.loading import get_model
 from django.core.management.base import LabelCommand, CommandError
@@ -30,7 +29,7 @@ class Command(LabelCommand):
         if not Model:
             raise CommandError('Model "{0}" not found!'.format(label))
 
-        filename = os.path.join(settings.PROJECT_ROOT, '..',
+        filename = os.path.join(os.path.expanduser('~'),
                                 '{0}.csv'.format(label))
         resultcsv = csv.writer(open(filename, 'wb'), delimiter=';',
                                quoting=csv.QUOTE_MINIMAL)
