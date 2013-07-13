@@ -30,11 +30,17 @@ class Command(LabelCommand):
             raise CommandError('Model "{0}" not found!'.format(label))
         return Model
 
+    def get_result_filename(self, label):
+        directory = os.path.join(os.path.expanduser('~'), 'exportdata')
+        # TODO: add option for configuration directory
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+        return os.path.join(directory, '{0}.csv'.format(label))
+
     def handle_label(self, label, **options):
         Model = self.get_model(label)
+        filename = self.get_result_filename(label)
 
-        filename = os.path.join(os.path.expanduser('~'),
-                                '{0}.csv'.format(label))
         resultcsv = csv.writer(open(filename, 'wb'), delimiter=';',
                                quoting=csv.QUOTE_MINIMAL)
 
