@@ -54,8 +54,13 @@ class Command(LabelCommand):
             qs = qs.order_by(*ordering)
         return qs
 
+    def get_fields(self, fields, Model):
+        if not fields:
+            return map(lambda x: x.name, Model._meta.fields)
+        return fields.split(',')
+
     def handle_label(self, label, **options):
-        fields = options.get('fields')
+        fields = options.get('fields', None)
         filters = options.get('filters', None)
         ordering = options.get('ordering', None)
 
@@ -68,7 +73,8 @@ class Command(LabelCommand):
         qs = self.set_filters(qs, filters)
         qs = self.set_ordering(qs, ordering)
 
-        fields = fields.split(',')
+        fields = self.get_fields(fields, Model)
+
         resultcsv.writerow(fields)
         for obj in qs:
             result = []
