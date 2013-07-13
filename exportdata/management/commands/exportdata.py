@@ -48,6 +48,12 @@ class Command(LabelCommand):
                 qs = getattr(qs, filter_name)()
         return qs
 
+    def set_ordering(self, qs, ordering):
+        if ordering:
+            ordering = ordering.split(',')
+            qs = qs.order_by(*ordering)
+        return qs
+
     def handle_label(self, label, **options):
         Model = self.get_model(label)
         filename = self.get_result_filename(label)
@@ -61,10 +67,7 @@ class Command(LabelCommand):
 
         qs = Model.objects.all()
         qs = self.set_filters(qs, filters)
-
-        if ordering:
-            ordering = ordering.split(',')
-            qs = qs.order_by(*ordering)
+        qs = self.set_ordering(qs, ordering)
 
         fields = fields.split(',')
         resultcsv.writerow(fields)
