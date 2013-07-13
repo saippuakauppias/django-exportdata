@@ -55,15 +55,14 @@ class Command(LabelCommand):
         return qs
 
     def handle_label(self, label, **options):
-        Model = self.get_model(label)
-        filename = self.get_result_filename(label)
-
-        resultcsv = csv.writer(open(filename, 'wb'), delimiter=';',
-                               quoting=csv.QUOTE_MINIMAL)
-
         fields = options.get('fields')
         filters = options.get('filters', None)
         ordering = options.get('ordering', None)
+
+        Model = self.get_model(label)
+        filename = self.get_result_filename(label)
+        resultcsv = csv.writer(open(filename, 'wb'), delimiter=';',
+                               quoting=csv.QUOTE_MINIMAL)
 
         qs = Model.objects.all()
         qs = self.set_filters(qs, filters)
