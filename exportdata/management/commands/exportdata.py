@@ -37,6 +37,17 @@ class Command(LabelCommand):
             os.makedirs(directory)
         return os.path.join(directory, '{0}.csv'.format(label))
 
+    def set_filters(self, qs, filters):
+        if filters:
+            filters = filters.split(',')
+            for filter_name in filters:
+                if not hasattr(qs, filter_name):
+                    raise CommandError(
+                        'Model not have "{1}" method'.format(filter_name)
+                    )
+                qs = getattr(qs, filter_name)()
+        return qs
+
     def handle_label(self, label, **options):
         Model = self.get_model(label)
         filename = self.get_result_filename(label)
@@ -49,17 +60,7 @@ class Command(LabelCommand):
         ordering = options.get('ordering', None)
 
         qs = Model.objects.all()
-        if filters:
-            filters = filters.split(',')
-            for filter_name in filters:
-                if not hasattr(qs, filter_name):
-                    raise CommandError(
-                        'Model "{0}" not not to have "{1}" filter'.format(
-                            label,
-                            filter_name
-                        )
-                    )
-                qs = getattr(qs, filter_name)()
+        qs = self.set_filters(qs, filters)
 
         if ordering:
             ordering = ordering.split(',')
