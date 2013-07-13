@@ -59,6 +59,37 @@ class Command(LabelCommand):
             return map(lambda x: x.name, Model._meta.fields)
         return fields.split(',')
 
+    def get_field_data(self, field_name, obj):
+        if '__' in field_name:
+            parent_field, child_field = field_name.split('__', 1)
+
+            if not hasattr(obj, parent_field):
+                msg = 'Model object has no attribute "{0}"'.format(
+                    parent_field)
+                raise CommandError(msg)
+            field = getattr(obj, parent_field, None)
+
+            if not hasattr(field, child_field):
+                msg = '"{0}" object has no attribute "{1}"'.format(
+                    parent_field, child_field)
+                raise CommandError(msg)
+            field = getattr(field, child_field)
+        else:
+            field = getattr(obj, field_name)
+
+        if isinstance(field, Callable):
+            field = field()
+
+        # TODO: move get_absolute_url to options (site_url_fields)
+        if field_name == 'get_absolute_url':
+            # hack, because in python not possible
+            # check function has a decorator
+            field = u'http://{0}{1}'.format(DOMAIN, field)
+
+        if isinstance(field, (str, unicode,)):
+            field = field.encode('utf-8')
+        return field
+
     def handle_label(self, label, **options):
         fields = options.get('fields', None)
         filters = options.get('filters', None)
@@ -79,25 +110,8 @@ class Command(LabelCommand):
         for obj in qs:
             result = []
             for field_name in fields:
-                if '__' in field_name:
-                    parent_field, child_field = field_name.split('__', 1)
-                    field = getattr(obj, parent_field, None)
-                    field = getattr(field, child_field, None)
-                else:
-                    field = getattr(obj, field_name, None)
-
-                if isinstance(field, Callable):
-                    field = field()
-
-                # TODO: move get_absolute_url to options (site_url_fields)
-                if field_name == 'get_absolute_url':
-                    # hack, because in python not possible
-                    # check function has a decorator
-                    field = u'http://{0}{1}'.format(DOMAIN, field)
-
-                if isinstance(field, (str, unicode,)):
-                    field = field.encode('utf-8')
-                result.append(field)
+                data = self.get_field_data(field_name, obj)
+                result.append(data)
 
             resultcsv.writerow(result)
 
