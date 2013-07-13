@@ -23,11 +23,15 @@ class Command(LabelCommand):
     help = 'Export any data in csv'
     label = 'app.model'
 
-    def handle_label(self, label, **options):
+    def get_model(self, label):
         app, model = label.split('.', 1)
         Model = get_model(app, model)
         if not Model:
             raise CommandError('Model "{0}" not found!'.format(label))
+        return Model
+
+    def handle_label(self, label, **options):
+        Model = self.get_model(label)
 
         filename = os.path.join(os.path.expanduser('~'),
                                 '{0}.csv'.format(label))
