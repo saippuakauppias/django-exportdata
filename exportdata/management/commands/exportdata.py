@@ -43,9 +43,8 @@ class Command(LabelCommand):
             for filter_name in filters:
                 # TODO: advanced filtration: filter_name.split('=', 1)
                 if not hasattr(qs, filter_name):
-                    raise CommandError(
-                        'Model not have "{1}" method'.format(filter_name)
-                    )
+                    msg = 'Model has no method "{1}"'.format(filter_name)
+                    raise CommandError(msg)
                 qs = getattr(qs, filter_name)()
         return qs
 
