@@ -80,18 +80,21 @@ class Command(LabelCommand):
             result = []
             for field_name in fields:
                 if '__' in field_name:
-                    field_name = field_name.split('__', 1)
-                    field = getattr(obj, field_name[0], None)
-                    field = getattr(field, field_name[1], None)
+                    parent_field, child_field = field_name.split('__', 1)
+                    field = getattr(obj, parent_field, None)
+                    field = getattr(field, child_field, None)
                 else:
                     field = getattr(obj, field_name, None)
+
+                if isinstance(field, Callable):
+                    field = field()
+
+                # TODO: move get_absolute_url to options (site_url_fields)
                 if field_name == 'get_absolute_url':
                     # hack, because in python not possible
                     # check function has a decorator
-                    field = field()
                     field = u'http://{0}{1}'.format(DOMAIN, field)
-                if isinstance(field, Callable):
-                    field = field()
+
                 if isinstance(field, (str, unicode,)):
                     field = field.encode('utf-8')
                 result.append(field)
