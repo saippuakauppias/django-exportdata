@@ -36,6 +36,7 @@ class Command(LabelCommand):
     help = 'Export filtered/ordered/ranged data from model (with selected ' \
            'fields) in csv'
     label = 'app.model'
+    args = '<app.model>'
 
     def get_model(self, label):
         app, model = label.split('.', 1)
