@@ -43,3 +43,7 @@ Or set range with comma-separated values:
 Set custom file path for save:
 
     $ python manage.py exportdata app.model --filepath=directory/filename.extension
+
+Set fields when decorated ``models.permalink`` (by default ``get_absolute_url`` field). For adding the domain before data:
+
+    $ python manage.py exportdata app.model --permalinks=get_absolute_url,get_absolute_admin_url
