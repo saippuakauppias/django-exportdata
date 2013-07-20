@@ -88,12 +88,14 @@ class Command(LabelCommand):
                 from_value, to_value = pk_range.split('-', 1)
                 qs = qs.filter(pk__gte=from_value)
                 qs = qs.filter(pk__lte=to_value)
-            if ',' in pk_range:
+            elif ',' in pk_range:
                 values = pk_range.split(',')
                 lookup = Q(pk=values[0])
                 for value in values[1:]:
                     lookup |= Q(pk=value)
                 qs = qs.filter(lookup)
+            else:
+                raise CommandError('Wrong range option format!')
         return qs
 
     def get_fields(self, fields, Model):
