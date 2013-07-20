@@ -24,9 +24,9 @@ Set fields for export:
 
     $ python manage.py exportdata app.model --fields=pk,model_field,get_absolute_url,method_property,fk__field
 
-Set custom filtration (based on model manager methods):
+Set custom filtration (based on model manager methods and ``filter(field=value)`` filtration):
 
-    $ python manage.py exportdata app.model --filters=active,paid
+    $ python manage.py exportdata app.model --filters=active,paid,field=value,fk__field__gte=value
 
 Set custom ordering:
 
