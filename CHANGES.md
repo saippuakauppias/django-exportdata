@@ -2,6 +2,10 @@
 Changes
 ----------
 
+###Next release
+
+* Fixed possible for set wrong formatted ``--range`` option
+
 ###0.2 (2013-07-20)
 
 * Moved many operations in methods with improvements
