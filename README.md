@@ -31,3 +31,11 @@ Set custom filtration (based on model manager methods and ``filter(field=value)`
 Set custom ordering:
 
     $ python manage.py exportdata app.model --ordering=-created_on,title
+
+Set "from and to" range values primary keys (pks) for export:
+
+    $ python manage.py exportdata app.model --range=1-100
+
+Or set range with comma-separated values:
+
+    $ python manage.py exportdata app.model --range=1,2,3,4,5
