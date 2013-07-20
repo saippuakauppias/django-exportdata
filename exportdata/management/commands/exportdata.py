@@ -15,7 +15,7 @@ DOMAIN = Site.objects.get_current().domain
 class Command(LabelCommand):
 
     option_list = LabelCommand.option_list + (
-        make_option('--fields', dest='fields'),
+        make_option('--fields', dest='fields', default=None),
         make_option('--filters', dest='filters', default=None),
         make_option('--ordering', dest='ordering', default=None),
         # TODO: advanced filtration, ranges
@@ -96,9 +96,9 @@ class Command(LabelCommand):
         return field
 
     def handle_label(self, label, **options):
-        fields = options.get('fields', None)
-        filters = options.get('filters', None)
-        ordering = options.get('ordering', None)
+        fields = options.get('fields')
+        filters = options.get('filters')
+        ordering = options.get('ordering')
 
         Model = self.get_model(label)
         filename = self.get_result_filename(label)
