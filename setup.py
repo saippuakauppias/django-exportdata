@@ -8,7 +8,7 @@ def read(filename):
 
 setup(
     name='django-exportdata',
-    version='0.1',
+    version='0.2',
     license='ISC',
     description='Export model data (with selected fields) to csv file',
     long_description=read('README.md') + read('CHANGES.md'),
