@@ -103,6 +103,11 @@ class Command(LabelCommand):
             return map(lambda x: x.name, Model._meta.fields)
         return fields.split(',')
 
+    def get_permalinks(self, permalinks):
+        if not isinstance(permalinks, list):
+            permalinks = permalinks.split(',')
+        return permalinks
+
     def get_field_data(self, field_name, obj, permalinks):
         if '__' in field_name:
             parent_field, child_field = field_name.split('__', 1)
@@ -146,15 +151,13 @@ class Command(LabelCommand):
         resultcsv = csv.writer(open(full_path, 'wb'), delimiter=';',
                                quoting=csv.QUOTE_MINIMAL)
 
-        if not isinstance(permalinks, list):
-            permalinks = permalinks.split(',')
-
         qs = Model.objects.all()
         qs = self.set_filters(qs, filters)
         qs = self.set_ordering(qs, ordering)
         qs = self.set_range(qs, pk_range)
 
         fields = self.get_fields(fields, Model)
+        permalinks = self.get_permalinks(permalinks)
 
         resultcsv.writerow(fields)
         for obj in qs:
