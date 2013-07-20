@@ -41,11 +41,16 @@ class Command(LabelCommand):
         if filters:
             filters = filters.split(',')
             for filter_name in filters:
-                # TODO: advanced filtration: filter_name.split('=', 1)
-                if not hasattr(qs, filter_name):
-                    msg = 'Model has no method "{1}"'.format(filter_name)
+                if '=' in filter_name:
+                    field, value = filter_name.split('=', 1)
+                    qs = qs.filter(**{field: value})
+                elif hasattr(qs, filter_name):
+                    qs = getattr(qs, filter_name)()
+                else:
+                    msg = 'Model has no method "{0}" ' \
+                          'or this filter not "key=value" ' \
+                          'formatted'.format(filter_name)
                     raise CommandError(msg)
-                qs = getattr(qs, filter_name)()
         return qs
 
     def set_ordering(self, qs, ordering):
