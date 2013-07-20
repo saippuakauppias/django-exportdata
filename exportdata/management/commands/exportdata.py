@@ -4,6 +4,7 @@ import sys
 from optparse import make_option
 from collections import Callable
 
+from django.db.models import Q
 from django.contrib.sites.models import Site
 from django.db.models.loading import get_model
 from django.core.management.base import LabelCommand, CommandError
@@ -18,7 +19,7 @@ class Command(LabelCommand):
         make_option('--fields', dest='fields', default=None),
         make_option('--filters', dest='filters', default=None),
         make_option('--ordering', dest='ordering', default=None),
-        # TODO: advanced filtration, ranges
+        make_option('--range', dest='range', default=None)
     )
     help = 'Export any data in csv'
     label = 'app.model'
@@ -57,6 +58,20 @@ class Command(LabelCommand):
         if ordering:
             ordering = ordering.split(',')
             qs = qs.order_by(*ordering)
+        return qs
+
+    def set_range(self, qs, pk_range):
+        if pk_range:
+            if '-' in pk_range:
+                from_value, to_value = pk_range.split('-', 1)
+                qs = qs.filter(pk__gte=from_value)
+                qs = qs.filter(pk__lte=to_value)
+            if ',' in pk_range:
+                values = pk_range.split(',')
+                lookup = Q(pk=values[0])
+                for value in values[1:]:
+                    lookup |= Q(pk=value)
+                qs = qs.filter(lookup)
         return qs
 
     def get_fields(self, fields, Model):
@@ -99,6 +114,7 @@ class Command(LabelCommand):
         fields = options.get('fields')
         filters = options.get('filters')
         ordering = options.get('ordering')
+        pk_range = options.get('range')
 
         Model = self.get_model(label)
         filename = self.get_result_filename(label)
@@ -108,6 +124,7 @@ class Command(LabelCommand):
         qs = Model.objects.all()
         qs = self.set_filters(qs, filters)
         qs = self.set_ordering(qs, ordering)
+        qs = self.set_range(qs, pk_range)
 
         fields = self.get_fields(fields, Model)
 
