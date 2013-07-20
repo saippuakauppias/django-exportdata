@@ -21,6 +21,8 @@ class Command(LabelCommand):
         make_option('--ordering', dest='ordering', default=None),
         make_option('--range', dest='range', default=None),
         make_option('--filepath', dest='filepath', default=None),
+        make_option('--permalinks', dest='permalinks',
+                    default=['get_absolute_url']),
     )
     help = 'Export any data in csv'
     label = 'app.model'
@@ -88,7 +90,7 @@ class Command(LabelCommand):
             return map(lambda x: x.name, Model._meta.fields)
         return fields.split(',')
 
-    def get_field_data(self, field_name, obj):
+    def get_field_data(self, field_name, obj, permalinks):
         if '__' in field_name:
             parent_field, child_field = field_name.split('__', 1)
 
@@ -109,8 +111,7 @@ class Command(LabelCommand):
         if isinstance(field, Callable):
             field = field()
 
-        # TODO: move get_absolute_url to options (site_url_fields)
-        if field_name == 'get_absolute_url':
+        if field_name in permalinks:
             # hack, because in python not possible
             # check function has a decorator
             field = u'http://{0}{1}'.format(DOMAIN, field)
@@ -125,11 +126,15 @@ class Command(LabelCommand):
         ordering = options.get('ordering')
         pk_range = options.get('range')
         filepath = options.get('filepath')
+        permalinks = options.get('permalinks')
 
         Model = self.get_model(label)
         full_path = self.get_result_filename(filepath, label)
         resultcsv = csv.writer(open(full_path, 'wb'), delimiter=';',
                                quoting=csv.QUOTE_MINIMAL)
+
+        if not isinstance(permalinks, list):
+            permalinks = permalinks.split(',')
 
         qs = Model.objects.all()
         qs = self.set_filters(qs, filters)
@@ -142,7 +147,7 @@ class Command(LabelCommand):
         for obj in qs:
             result = []
             for field_name in fields:
-                data = self.get_field_data(field_name, obj)
+                data = self.get_field_data(field_name, obj, permalinks)
                 result.append(data)
 
             resultcsv.writerow(result)
