@@ -5,6 +5,7 @@ Changes
 ###Next release
 
 * Fixed possible for set wrong formatted ``--range`` option
+* Improved get permalinks - moved code in method
 
 ###0.2 (2013-07-20)
 
