@@ -16,15 +16,25 @@ DOMAIN = Site.objects.get_current().domain
 class Command(LabelCommand):
 
     option_list = LabelCommand.option_list + (
-        make_option('--fields', dest='fields', default=None),
-        make_option('--filters', dest='filters', default=None),
-        make_option('--ordering', dest='ordering', default=None),
-        make_option('--range', dest='range', default=None),
-        make_option('--filepath', dest='filepath', default=None),
+        make_option('--fields', dest='fields', default=None,
+                    help='Comma-separated list of fields for export'),
+        make_option('--filters', dest='filters', default=None,
+                    help='"field=value" formatted list or comma-separated '
+                         'list of model methods for filtering'),
+        make_option('--ordering', dest='ordering', default=None,
+                    help='Comma-separated list of fields for order_by method'),
+        make_option('--range', dest='range', default=None,
+                    help='"from-to" range or comma-separated list '
+                         'of primary keys for export'),
+        make_option('--filepath', dest='filepath', default=None,
+                    help='Path to file for save data'),
         make_option('--permalinks', dest='permalinks',
-                    default=['get_absolute_url']),
+                    default=['get_absolute_url'],
+                    help='Comma-separated list of model methods decorated '
+                         '"models.permalink" decorator'),
     )
-    help = 'Export any data in csv'
+    help = 'Export filtered/ordered/ranged data from model (with selected ' \
+           'fields) in csv'
     label = 'app.model'
 
     def get_model(self, label):
