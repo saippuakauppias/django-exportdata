@@ -2,14 +2,15 @@
 Changes
 ----------
 
-###Next release
+###0.2 (2013-07-20)
 
-* Move many operations in methods with improvements
-* Add advanced fitration for ``--filters`` option
-* Add support ``--range`` option
-* Add ``--filepath`` option for set file for save data
-* Add ``--permalinks`` option for get ``models.permalink`` decorated fields
-* Add help for all options and for the command
+* Moved many operations in methods with improvements
+* Added advanced fitration for ``--filters`` option
+* Added support ``--range`` option
+* Added ``--filepath`` option for set file for save data
+* Added ``--permalinks`` option for get ``models.permalink`` decorated fields
+* Added help for all options and for the command
+* Added package documentation on ReadTheDocs
 
 ###0.1 (2013-07-13)
 

@@ -1,8 +1,14 @@
 django-exportdata
 =================
 
-Export model data (filtered and ordered) to csv file.
-Useful for create reports for model with only selected fields.
+App for export data in csv files from models with selected fields and custom filtration.
+
+Useful for create reports and calculate some statistic data for external sources.
+
+Requires
+--------
+
+Python 2.6 or 2.7 and Django 1.3 and higher.
 
 Installation
 ------------
@@ -13,8 +19,8 @@ Install using pip:
 
 Add ``exportdata`` in ``INSTALLED_APPS``.
 
-Example Of Usage
-----------------
+Examples Of Usage
+-----------------
 
 Create **~/exportdata/auth.User.csv** file with all model data:
 
