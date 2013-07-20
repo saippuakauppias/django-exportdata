@@ -1,22 +1,31 @@
-.. django-exportdata documentation master file, created by
-   sphinx-quickstart on Sat Jul 20 19:38:09 2013.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+django-exportdata
+=================
 
-Welcome to django-exportdata's documentation!
-=============================================
+App for export data in csv files from models with selected fields and custom filtration. |br|
+Useful for create reports and calculate some statistic data for external sources.
 
-Contents:
+Contents
+--------
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
+
+   installation
+   usage
+   serializers
+   changelog
+
+Contributing
+------------
+
+You can grab latest code at Github_.
+
+Feel free to submit issues_, pull requests are also welcome.
+
+.. _Github: https://github.com/saippuakauppias/django-exportdata
+.. _issues: https://github.com/saippuakauppias/django-exportdata/issues
 
 
+.. |br| raw:: html
 
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
+   <br />
