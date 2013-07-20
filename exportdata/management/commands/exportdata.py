@@ -19,7 +19,8 @@ class Command(LabelCommand):
         make_option('--fields', dest='fields', default=None),
         make_option('--filters', dest='filters', default=None),
         make_option('--ordering', dest='ordering', default=None),
-        make_option('--range', dest='range', default=None)
+        make_option('--range', dest='range', default=None),
+        make_option('--filepath', dest='filepath', default=None),
     )
     help = 'Export any data in csv'
     label = 'app.model'
@@ -31,12 +32,20 @@ class Command(LabelCommand):
             raise CommandError('Model "{0}" not found!'.format(label))
         return Model
 
-    def get_result_filename(self, label):
-        directory = os.path.join(os.path.expanduser('~'), 'exportdata')
-        # TODO: add option for configuration directory
+    def get_result_filename(self, filepath, label):
+        if filepath:
+            directory = filepath.rsplit('/', 1)
+            filename = directory.pop()
+            if directory:
+                directory = directory.pop()
+            else:
+                directory = '.'
+        else:
+            directory = os.path.join(os.path.expanduser('~'), 'exportdata')
+            filename = '{0}.csv'.format(label)
         if not os.path.exists(directory):
             os.makedirs(directory)
-        return os.path.join(directory, '{0}.csv'.format(label))
+        return os.path.join(directory, filename)
 
     def set_filters(self, qs, filters):
         if filters:
@@ -115,10 +124,11 @@ class Command(LabelCommand):
         filters = options.get('filters')
         ordering = options.get('ordering')
         pk_range = options.get('range')
+        filepath = options.get('filepath')
 
         Model = self.get_model(label)
-        filename = self.get_result_filename(label)
-        resultcsv = csv.writer(open(filename, 'wb'), delimiter=';',
+        full_path = self.get_result_filename(filepath, label)
+        resultcsv = csv.writer(open(full_path, 'wb'), delimiter=';',
                                quoting=csv.QUOTE_MINIMAL)
 
         qs = Model.objects.all()
