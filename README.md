@@ -39,3 +39,7 @@ Set "from and to" range values primary keys (pks) for export:
 Or set range with comma-separated values:
 
     $ python manage.py exportdata app.model --range=1,2,3,4,5
+
+Set custom file path for save:
+
+    $ python manage.py exportdata app.model --filepath=directory/filename.extension
