@@ -53,3 +53,7 @@ Set custom file path for save:
 Set fields when decorated ``models.permalink`` (by default ``get_absolute_url`` field). For adding the domain before data:
 
     $ python manage.py exportdata app.model --permalinks=get_absolute_url,get_absolute_admin_url
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/saippuakauppias/django-exportdata/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
